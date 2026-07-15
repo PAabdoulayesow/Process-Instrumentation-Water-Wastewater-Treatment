@@ -1,0 +1,48 @@
+# PID Control Loops — Water/Wastewater Treatment
+
+## Overview
+Three representative control loops typical of a water/wastewater treatment
+process: flow control, level control, and chemical dosing (pH) control.
+Each uses a PID (Proportional-Integral-Derivative) algorithm to maintain a
+setpoint despite disturbances (varying inflow, demand changes).
+
+## Loop 1 — Flow control (transfer pump)
+- **Process variable (PV):** Flow rate (measured by flow meter)
+- **Setpoint (SP):** Target flow rate to downstream process
+- **Control output:** VFD speed reference to transfer pump motor
+- **Tuning approach:** Start with P-only, add I to eliminate steady-state
+  error, add D only if flow is very responsive/noisy (usually minimal D
+  needed for flow loops)
+
+## Loop 2 — Level control (tank/wet well)
+- **PV:** Tank level (ultrasonic or pressure transmitter)
+- **SP:** Target level band (e.g. maintain between 40-60%)
+- **Control output:** Pump start/stop or VFD speed modulation
+- **Tuning approach:** Level loops are typically slow — favor higher
+  integral time to avoid pump short-cycling; consider on/off with deadband
+  for simple applications, full PID for VFD-modulated applications
+
+## Loop 3 — pH control (chemical dosing)
+- **PV:** pH (measured by pH probe/transmitter)
+- **SP:** Target pH range (e.g. 6.5-8.5 for discharge compliance)
+- **Control output:** Dosing pump speed/stroke rate (acid or caustic)
+- **Tuning approach:** pH loops are notoriously nonlinear (titration curve) —
+  conservative tuning (lower gain) near the setpoint to avoid overshoot/
+  oscillation; may require gain scheduling for wide pH swings
+
+## General PID tuning method used
+1. Start with output at manual/zero, note process response to a step change
+   in output (open-loop test) — establishes process gain and lag
+2. Set initial P based on process gain, I to eliminate offset, D sparingly
+   (only for fast, low-noise loops)
+3. Test closed-loop response to setpoint change; adjust for acceptable
+   settling time without excessive overshoot
+4. Verify performance under disturbance (e.g. sudden inflow change) not just
+   setpoint change
+
+## Why this matters
+Poorly tuned PID loops in a treatment process cause either sluggish response
+(risk of non-compliance) or oscillation (equipment wear, chemical waste).
+Understanding both the process behavior and the tuning method — not just
+"turning the knob until it looks stable" — is what separates a technician
+who can troubleshoot control issues from one who can only replace parts.
