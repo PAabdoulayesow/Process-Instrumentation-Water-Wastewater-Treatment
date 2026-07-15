@@ -1,0 +1,45 @@
+# Pump Maintenance Program — Mechanical Power Transmission
+
+## Overview
+Pumps are both a controlled process element (see `pid-control-loops.md`) and
+a mechanical asset requiring dedicated maintenance — specifically around
+**power transmission**: how motor power is delivered to the pump (direct
+coupling, belt drive) and the rotating components that can wear or fail.
+
+## Power transmission types covered
+| Type | Description | Common Failure Points |
+|---|---|---|
+| Direct coupling | Motor shaft directly coupled to pump shaft | Misalignment, coupling element wear, bearing wear |
+| Belt drive | Motor drives pump via belt/pulley | Belt tension/wear, pulley alignment, bearing wear |
+| Mechanical seal | Seals pump shaft where it exits the casing | Seal face wear, leakage, dry-running damage |
+
+## Preventive maintenance tasks
+| Task | Frequency | What to check |
+|---|---|---|
+| Coupling alignment check | Quarterly (or per vibration trend) | Angular/parallel misalignment within tolerance |
+| Bearing inspection | Monthly | Temperature, noise/vibration, lubrication condition |
+| Mechanical seal inspection | Monthly | Leakage at seal, visible wear |
+| Belt tension/condition (if belt-driven) | Monthly | Tension per spec, cracking/glazing, pulley alignment |
+| Lubrication | Per manufacturer schedule | Correct grease/oil type and quantity — over-lubrication is also a failure cause |
+| Vibration analysis | Quarterly (or continuous if monitored) | Trend against baseline to catch bearing/alignment issues early |
+
+## Corrective troubleshooting — common pump failure symptoms
+| Symptom | Likely Cause(s) | Diagnostic Approach |
+|---|---|---|
+| Excessive vibration | Misalignment, bearing wear, cavitation | Check alignment first (cheapest to verify), then bearing condition, then suction conditions (cavitation) |
+| Seal leakage | Seal face wear, misalignment inducing shaft deflection | Inspect seal; check alignment before replacing seal — misalignment causes repeat failures |
+| Reduced flow/pressure | Impeller wear, suction blockage, worn wear rings | Check suction strainer/blockage first (simplest), then internal wear |
+| Overheating (motor or bearing) | Misalignment, bearing lubrication issue, electrical overload | Cross-reference with `corrective-troubleshooting-method.md` (maintenance repo) for systematic diagnosis |
+
+## Link to AMDEC and PM scheduling
+Following the same logic as `amdec-fmea-analysis.md`
+(`blueprint-reading-mechanical-install` repo), pump criticality (e.g. a
+single transfer pump with no backup vs. a redundant dosing pump) should
+drive PM frequency — a critical single-point-of-failure pump warrants
+tighter monitoring intervals than a redundant one.
+
+## Skills demonstrated
+- Pump mechanical maintenance (coupling, belt drive, mechanical seals)
+- Power transmission alignment and inspection
+- Vibration-based condition monitoring principles
+- Systematic troubleshooting applied to rotating equipment
