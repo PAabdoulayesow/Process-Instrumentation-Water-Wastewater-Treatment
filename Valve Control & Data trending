@@ -1,0 +1,69 @@
+# Valve Control, Flow/Pressure Management & Data Trending
+
+## 1. Control valve management
+Control valves regulate flow or pressure by modulating opening position
+(0-100%) based on a PID controller output — distinct from on/off pumps,
+valves allow fine, continuous control.
+
+| Aspect | Detail |
+|---|---|
+| Valve type | Modulating control valve (e.g. globe or butterfly, electric or pneumatic actuator) |
+| Control signal | 4-20mA or 0-10V position command from PID controller |
+| Position feedback | 4-20mA position transmitter, closes the loop for accurate positioning |
+| Valve characteristic | Equal-percentage or linear, selected based on process (equal-% common for flow control with variable pressure drop) |
+| Fail-safe position | Fail-open or fail-closed on air/power loss, chosen per process safety requirement (e.g. dosing valve typically fails closed) |
+
+### Valve commissioning checks
+1. Verify full stroke (0-100%) matches actual physical travel
+2. Verify fail-safe action on loss of signal/air/power
+3. Check for valve hysteresis (difference between commanded and actual
+   position going up vs. down) — excessive hysteresis degrades control loop
+   performance
+4. Tune associated PID loop only after valve stroke/response is verified —
+   a sticking or oversized valve will fight good tuning
+
+## 2. Flow control loop
+- **PV:** Flow rate (magnetic flow meter or equivalent)
+- **Final control element:** Control valve (or VFD-driven pump, depending on
+  application)
+- **Control note:** Valve-based flow control depends on valve characteristic
+  matching the process — equal-percentage valves linearize flow response
+  when pressure drop varies significantly across the operating range
+
+## 3. Pressure control loop
+- **PV:** Pressure (pressure transmitter, upstream or downstream depending
+  on application — e.g. maintaining discharge pressure or backpressure)
+- **Final control element:** Control valve or VFD-driven pump
+- **Control note:** Pressure loops tend to be fast — tuning favors slightly
+  more conservative gain than flow loops to avoid valve hunting/oscillation
+
+## 4. Data trending & historian (timestamped data)
+A SCADA historian records process values with timestamps, enabling trend
+analysis over time — critical for troubleshooting, compliance reporting, and
+spotting slow degradation (e.g. valve wear, sensor drift) that isn't visible
+in real-time values alone.
+
+### What gets trended
+| Data point | Why it's trended |
+|---|---|
+| Flow, level, pressure (PV vs SP) | Verify control loop performance over time, spot oscillation or drift |
+| Valve position | Detect valve wear (increasing position needed for same flow = wear or fouling) |
+| pH, chlorine, turbidity | Compliance reporting, process performance history |
+| Pump run status/amperage | Detect increasing load over time (bearing wear, blockage) — links to `pump-maintenance-program.md` |
+| Alarms (timestamped) | Root-cause analysis after an upset — correlate alarm sequence with trend data |
+
+### Implementation (Ignition SCADA)
+- Historian tags configured for each key process value, with an appropriate
+  logging rate (e.g. every 10-30 sec for fast loops, every few minutes for
+  slow trends like tank level over a day)
+- Trend screens built in Ignition showing PV/SP/output overlay for each
+  control loop, with timestamp-based zoom/pan for troubleshooting
+- Alarm history logged with timestamp, allowing correlation with trend data
+  during incident review
+
+## Skills demonstrated
+- Control valve selection, commissioning, and troubleshooting
+- Flow and pressure PID loop configuration
+- SCADA historian/trending configuration (Ignition)
+- Using timestamped trend data for root-cause analysis and compliance
+  reporting
