@@ -1,88 +1,40 @@
-# Technical Specification
-## Process Instrumentation & Water/Wastewater Treatment
+# Process Instrumentation & Water/Wastewater Treatment
 
-## 1. Purpose & Scope
-Define the functional, instrumentation, and mechanical requirements for a
-representative water/wastewater treatment process stage: flow/level
-regulation, pH dosing control, and the pumps delivering that control action —
-applicable to municipal treatment facilities or industrial (e.g. plant
-effluent) treatment systems.
+## Overview
+This project covers process regulation and instrumentation typical of water
+and wastewater treatment — municipal or industrial (e.g. plant effluent
+treatment) — building on my  automation and
+mechanical projects elsewhere in this portfolio.
 
-## 2. Functional Block Diagram
-```mermaid
-flowchart LR
-    IN[Influent] --> TANK[Wet Well / Tank]
-    TANK -->|Level Sensor| CTRL[PID Controller / PLC]
-    CTRL -->|Speed Ref| PUMP[Transfer Pump - VFD]
-    PUMP --> VALVE[Control Valve]
-    VALVE --> OUT[Effluent / Downstream Process]
-    FLOWSENSOR[Flow/Pressure Sensors] --> CTRL
-    CTRL -->|Position Cmd| VALVE
-    PHSENSOR[pH Sensor] --> CTRL
-    CTRL -->|Dosing Rate| DOSE[Dosing Pump - Acid/Caustic]
-    DOSE --> TANK
-    CLSENSOR[Chlorine/Turbidity Sensors] --> CTRL
-    CTRL -->|Timestamped Data| HIST[SCADA Historian/Trending]
-    CTRL -->|Alarm/Status| SCADA[SCADA/HMI]
-```
+It also includes a dedicated **pump maintenance program**, covering
+mechanical power transmission (couplings, seals, bearings, drive components)
+specific to pumping equipment — since pumps are both a control element
+(regulated by PID/instrumentation) and a mechanical asset requiring its own
+maintenance program.
 
-## 3. Electrical/Instrumentation Schematic — Signal Overview
-```
-Level Transmitter (4-20mA) -----> PLC/Controller Analog In
-pH Transmitter (4-20mA)    -----> PLC/Controller Analog In
-Chlorine/Turbidity (4-20mA)-----> PLC/Controller Analog In
-PLC/Controller Analog Out  -----> Transfer Pump VFD (speed ref)
-PLC/Controller Analog Out  -----> Dosing Pump (stroke rate/speed)
-E-Stop / High-Level Switch -----> Hardwired pump trip (independent of PLC)
-```
+## Scope
+- PID control loops: flow, level, pressure regulation
+- Control valve management (positioning, fail-safe, commissioning)
+- Instrumentation: pH, chlorine residual, turbidity, temperature, flow
+  measurement
+- Dosing pump control (chemical dosing for treatment)
+- SCADA data trending/historian with timestamped process data
+- Pump mechanical maintenance: power transmission, seals, bearings, alignment
 
-### I/O List
-| Signal | Type | Purpose |
-|---|---|---|
-| Level | 4-20mA Analog In | Wet well/tank level for pump control |
-| pH | 4-20mA Analog In | Dosing control input |
-| Chlorine residual | 4-20mA Analog In | Treatment verification/compliance |
-| Turbidity | 4-20mA Analog In | Treatment verification |
-| Pump speed reference | 4-20mA / Analog Out | Transfer pump VFD control |
-| Valve position command | 4-20mA / Analog Out | Control valve positioning |
-| Valve position feedback | 4-20mA Analog In | Closes valve control loop |
-| Pressure | 4-20mA Analog In | Flow/pressure loop input |
-| Dosing pump rate | 4-20mA / Analog Out | Chemical dosing control |
-| High-level switch | Digital In (hardwired) | Safety trip, independent of PLC |
+## What's in this repo
+| File | Purpose |
+|---|---|
+| `pid-control-loops.md` | PID loop configuration for flow/level/pressure regulation |
+| `instrumentation-sensors.md` | Sensor selection and calibration approach (pH, chlorine, turbidity, flow, temperature) |
+| `pump-maintenance-program.md` | Mechanical power transmission maintenance program specific to pumps |
+| `valve-control-flow-pressure-trending.md` | Control valve management, flow/pressure loops, and SCADA data trending/historian |
+| `technical-specification.md` | Full technical specification: functional block diagram, schematics, constants |
 
-## 4. Mechanical Schematic — Pump Installation
-```
-[Wet Well/Tank] --> [Suction Piping] --> [Pump] --(coupling)--> [Motor/VFD]
-                                              |
-                                    [Discharge Piping] --> [Downstream Process]
-
-Alignment and mounting per `pump-maintenance-program.md` and the general
-installation tolerances in `mechanical-installation-procedure.md`
-(blueprint-reading-mechanical-install repo)
-```
-
-## 5. System Constants & Parameters
-| Parameter | Value/Range | Notes |
-|---|---|---|
-| Standard instrumentation signal | 4-20mA | Industry-standard analog signal, noise-resistant over distance |
-| pH control range | 6.5-8.5 (typical discharge compliance) | Site/regulation-dependent |
-| Chlorine residual target | Application-dependent (e.g. 0.2-2 mg/L) | Per regulatory requirement |
-| Pump control voltage | 24VDC (control), 480V (power, typical industrial) | Per site standard |
-| High-level trip | Hardwired, independent of PLC | Safety-critical, prevents overflow regardless of control system state |
-
-## 6. Alignment with Industry Expectations
-- **Compliance-driven instrumentation**: pH/chlorine monitoring directly
-  supports regulatory discharge compliance — relevant to both municipal
-  and industrial (e.g. plant effluent) treatment operations
-- **Safety-independent high-level protection**: hardwired trip regardless of
-  PLC/control state, consistent with the safety-first approach used across
-  this portfolio's other projects
-- **Maintainable pump systems**: dedicated mechanical maintenance program
-  (see `pump-maintenance-program.md`) ensures the mechanical reliability of
-  equipment the control system depends on
-
-## 7. Related documents in this repo
-- `pid-control-loops.md` — control loop tuning detail
-- `instrumentation-sensors.md` — sensor selection and calibration
-- `valve-control-flow-pressure-trending.md` — control valve, flow/pressure loops, SCADA trending
-- `pump-maintenance-program.md` — pump mechanical maintenance program
+## Skills demonstrated
+- PID control loop tuning and configuration
+- Control valve commissioning and troubleshooting
+- Process instrumentation selection and calibration
+- SCADA data trending/historian configuration
+- Water/wastewater treatment process fundamentals
+- Pump mechanical maintenance (power transmission, seals, bearings)
+- Integration of process control with mechanical maintenance planning
