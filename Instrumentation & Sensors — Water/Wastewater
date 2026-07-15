@@ -1,0 +1,29 @@
+# Instrumentation & Sensors — Water/Wastewater
+
+## Instrumentation summary
+| Parameter | Sensor Type | Typical Range | Calibration Consideration |
+|---|---|---|---|
+| pH | Glass electrode probe | 0-14 pH | 2-point calibration (buffer solutions, e.g. pH 4 & 7); electrode fouling/aging affects response time |
+| Chlorine residual | Amperometric or colorimetric sensor | 0-10 mg/L | Regular reagent/membrane maintenance (colorimetric); zero/span calibration |
+| Turbidity | Optical (nephelometric) sensor | 0-100+ NTU | Zero calibration with turbidity-free water; periodic lens cleaning |
+| Flow | Magnetic flow meter or ultrasonic | Application-dependent | Verify zero flow reading; check for air entrainment affecting magmeter accuracy |
+| Level | Ultrasonic or submersible pressure transmitter | Application-dependent | Verify against manual dip measurement; account for temperature effects on ultrasonic |
+| Temperature | RTD or thermocouple | Application-dependent | Verify against calibrated reference thermometer |
+
+## Calibration approach (general)
+1. Verify sensor is clean and undamaged before calibration
+2. Use certified reference standards (buffer solutions, calibration gas
+   equivalent for liquid sensors, reference weights/instruments)
+3. Perform zero and span calibration per manufacturer procedure
+4. Document calibration date, reference values used, and as-found/as-left
+   readings — same recordkeeping discipline used in gas detection
+   calibration work
+5. Set calibration frequency based on sensor drift history and criticality
+   (similar logic to AMDEC-driven PM frequency in the mechanical project)
+
+## Why this matters
+Instrumentation drift is often invisible until it causes a process upset or
+compliance issue. A technician who understands not just how to read a
+transmitter but how and why to calibrate it — and who documents that
+calibration — directly supports both process reliability and regulatory
+compliance in a treatment facility.
