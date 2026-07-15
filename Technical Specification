@@ -1,0 +1,80 @@
+# Technical Specification
+## Process Instrumentation & Water/Wastewater Treatment
+
+## 1. Purpose & Scope
+Define the functional, instrumentation, and mechanical requirements for a
+representative water/wastewater treatment process stage: flow/level
+regulation, pH dosing control, and the pumps delivering that control action —
+applicable to municipal treatment facilities or industrial (e.g. plant
+effluent) treatment systems.
+
+## 2. Functional Block Diagram
+```mermaid
+flowchart LR
+    IN[Influent] --> TANK[Wet Well / Tank]
+    TANK -->|Level Sensor| CTRL[PID Controller / PLC]
+    CTRL -->|Speed Ref| PUMP[Transfer Pump - VFD]
+    PUMP --> OUT[Effluent / Downstream Process]
+    PHSENSOR[pH Sensor] --> CTRL
+    CTRL -->|Dosing Rate| DOSE[Dosing Pump - Acid/Caustic]
+    DOSE --> TANK
+    CLSENSOR[Chlorine/Turbidity Sensors] --> CTRL
+    CTRL -->|Alarm/Status| SCADA[SCADA/HMI]
+```
+
+## 3. Electrical/Instrumentation Schematic — Signal Overview
+```
+Level Transmitter (4-20mA) -----> PLC/Controller Analog In
+pH Transmitter (4-20mA)    -----> PLC/Controller Analog In
+Chlorine/Turbidity (4-20mA)-----> PLC/Controller Analog In
+PLC/Controller Analog Out  -----> Transfer Pump VFD (speed ref)
+PLC/Controller Analog Out  -----> Dosing Pump (stroke rate/speed)
+E-Stop / High-Level Switch -----> Hardwired pump trip (independent of PLC)
+```
+
+### I/O List
+| Signal | Type | Purpose |
+|---|---|---|
+| Level | 4-20mA Analog In | Wet well/tank level for pump control |
+| pH | 4-20mA Analog In | Dosing control input |
+| Chlorine residual | 4-20mA Analog In | Treatment verification/compliance |
+| Turbidity | 4-20mA Analog In | Treatment verification |
+| Pump speed reference | 4-20mA / Analog Out | Transfer pump VFD control |
+| Dosing pump rate | 4-20mA / Analog Out | Chemical dosing control |
+| High-level switch | Digital In (hardwired) | Safety trip, independent of PLC |
+
+## 4. Mechanical Schematic — Pump Installation
+```
+[Wet Well/Tank] --> [Suction Piping] --> [Pump] --(coupling)--> [Motor/VFD]
+                                              |
+                                    [Discharge Piping] --> [Downstream Process]
+
+Alignment and mounting per `pump-maintenance-program.md` and the general
+installation tolerances in `mechanical-installation-procedure.md`
+(blueprint-reading-mechanical-install repo)
+```
+
+## 5. System Constants & Parameters
+| Parameter | Value/Range | Notes |
+|---|---|---|
+| Standard instrumentation signal | 4-20mA | Industry-standard analog signal, noise-resistant over distance |
+| pH control range | 6.5-8.5 (typical discharge compliance) | Site/regulation-dependent |
+| Chlorine residual target | Application-dependent (e.g. 0.2-2 mg/L) | Per regulatory requirement |
+| Pump control voltage | 24VDC (control), 480V (power, typical industrial) | Per site standard |
+| High-level trip | Hardwired, independent of PLC | Safety-critical, prevents overflow regardless of control system state |
+
+## 6. Alignment with Industry Expectations
+- **Compliance-driven instrumentation**: pH/chlorine monitoring directly
+  supports regulatory discharge compliance — relevant to both municipal
+  and industrial (e.g. plant effluent) treatment operations
+- **Safety-independent high-level protection**: hardwired trip regardless of
+  PLC/control state, consistent with the safety-first approach used across
+  this portfolio's other projects
+- **Maintainable pump systems**: dedicated mechanical maintenance program
+  (see `pump-maintenance-program.md`) ensures the mechanical reliability of
+  equipment the control system depends on
+
+## 7. Related documents in this repo
+- `pid-control-loops.md` — control loop tuning detail
+- `instrumentation-sensors.md` — sensor selection and calibration
+- `pump-maintenance-program.md` — pump mechanical maintenance program
